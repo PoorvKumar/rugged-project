@@ -1,0 +1,23 @@
+<% if(p.posts) {%>
+<% if(p.posts.length>0) {%>
+<div class="single-blog-post d-flex flex-inline mt-50">
+    <div class="thumnail mb-50"><a href="#"><img src= width="365px" height="365px"></a></div>
+    <div class="contentblog mb-50">
+     <p class="post-date"></p>
+     <a href="#" class="post-title"><h4><%= p.posts[p.posts.length-1].title %></h4></a>
+     <div class="post-meta">
+       <a href="#"><span class="byk">by</span> <span class="namek"><%= p.firstname +" "+ p.lastname %></span></a>
+       <a href="#"><i class="fa-regular fa-eye"></i> <span class="onenn">200</span></a>
+       <a href="#"><i class="fa-regular fa-comment"></i> <span class="onenn">12</span></a>
+     </div>
+     <p class="post-data">
+       <%= p.posts[p.posts.length-1].postBody %>
+     </p>
+     <a href="#" class="read-more">
+       CONTINUE READING 
+       <i class="fa-solid fa-arrow-right-long"></i>
+     </a>
+    </div>
+ </div>
+ <% } %>
+ <% } %>

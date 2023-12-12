@@ -1,0 +1,23 @@
+.notFound{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-flow: row nowrap;
+}
+.textcontainerouter{
+    display: flex;
+    flex-flow: column nowrap;
+    /* padding: 3% 5% 3% 5%; */
+}
+.textcontainer{
+    display: flex;
+    color: black !important;
+    /* font-size: large; */
+    font-size: 3rem;
+    font-weight: 600;
+}
+.imageclass{
+    display: flex;
+    /* justify-content: center;
+    align-items: center; */
+}

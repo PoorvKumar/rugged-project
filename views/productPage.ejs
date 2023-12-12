@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/72fdfa8245.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/css/main_navbar.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/productPage.css">
+  <!-- <script src="/public/js"></script> -->
+  <script src="/js/productPage.js"></script>
+  <title><%= pgTitle %></title>
+</head>
+
+<body>
+  <header>
+    <%- include('partials/Navbars/nav1.ejs') %>
+    <%- include('partials/Navbars/nav2.ejs') %>
+  </header>
+  <div class="ProductPageMainContent">
+    <div class="container-fluid mainContent">
+      <div class="row">
+        <div class="col-lg-1 MyBorder LeftColumn">
+          <ul>
+            <% for( let index = 0; index < productData.imagesURL.length; index++ ) { %>
+            <li class="productImageLi">
+              <div class="productImage">
+                <img src=<%=productData.imagesURL[index]%> alt="Product" class="ProductImageInner" onclick="ChangeMainPhotoTo('<%=index%>','<%=productData.imagesURL.length%>')">
+              </div>
+            </li>
+            <% } %>
+          </ul>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4 MyBorder">
+          <div class="productCarousel" data-bs-theme="dark">
+            <div id="carouselID2" class="carousel slide">
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselID2" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1" id="bottomButton0"></button>
+                <% for( let index = 1; index < productData.imagesURL.length; index++ ) { %>
+                <button type="button" data-bs-target="#carouselID2" data-bs-slide-to=<%=index%> aria-current="false" aria-label="Slide <%= index+1 %>" id="bottomButton<%=index%>"></button>
+                <% } %>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active" id="carouselPhoto0">
+                  <img src=<%= productData.imagesURL[0] %> class="d-block w-100 imgClass" alt="image0">
+                </div>
+                <% for( let index = 1; index < productData.imagesURL.length; index++ ) { %>
+                <div class="carousel-item" id="carouselPhoto<%=index%>">
+                  <img src=<%=productData.imagesURL[index]%> class="d-block w-100 imgClass" alt="image<%= index %>">
+                </div>
+                <% } %>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselID2" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselID2" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
+          <div class="lowerButtons mt-4">
+            <% if(isLoggedin) { %>
+            <form action="/addtoCart" method="POST">
+              <button type="submit" class="btn btn-warning btn-lg">Add to Cart</button>
+              <input type="hidden" name="productID" value="<%= productData._id %>">
+            </form>
+            <form action="/buynow" method="POST">
+              <button type="submit" class="btn btn-success btn-lg ">Buy Now</button>
+              <input type="hidden" name="productID" value="<%= productData._id %>">
+              <input type="hidden" name="noofitems" id="need" value="">
+            </form>
+            <% } %>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-7 col-lg-7  MyBorder RightColumn">
+          <div class="UpperContent">
+            <div class="brandName"><%=productData.brand%></div>
+            <div class="rightCompartment">
+              <% let totalNumberofPeople = productRating.ratingArray[5]+productRating.ratingArray[4]+productRating.ratingArray[3]+productRating.ratingArray[2]+productRating.ratingArray[1] ;
+              let sum = productRating.ratingArray[5]*5 +productRating.ratingArray[4]*4 +productRating.ratingArray[3]*3 + productRating.ratingArray[2]*2 + productRating.ratingArray[1]*1;
+              if(totalNumberofPeople===0){
+                totalNumberofPeople=1;
+              }
+              %>
+              <span class="starsRatingGreen rightCompartmentInner popupRating" onclick="popupRatingFunction('<%=productData._id%>')"><%=(sum/(totalNumberofPeople)).toFixed(2)%>
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMyIgaGVpZ2h0PSIxMiI+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTYuNSA5LjQzOWwtMy42NzQgMi4yMy45NC00LjI2LTMuMjEtMi44ODMgNC4yNTQtLjQwNEw2LjUuMTEybDEuNjkgNC4wMSA0LjI1NC40MDQtMy4yMSAyLjg4Mi45NCA0LjI2eiIvPjwvc3ZnPg==" class="innerStars">
+                <div class="popupContent" id="popupUserRating">
+                  <span class="heading">User Rating</span>
+                  <div class="row UserRatingGrid">
+                    <div class="EdgeColumn">
+                      <div>5 star</div>
+                    </div>
+                    <div class="CentreColumn">
+                      <!-- <div class="barContainer">
+                        <div class="bar5"></div>
+                      </div> -->
+                      ★★★★★
+                    </div>
+                    <div class="EdgeColumn rightText">
+                      <div><%=productRating.ratingArray[5]%></div>
+                    </div>
+                    <div class="EdgeColumn">
+                      <div>4 star</div>
+                    </div>
+                    <div class="CentreColumn">
+                      <!-- <div class="barContainer">
+                        <div class="bar4"></div>
+                      </div> -->
+                      ★★★★☆
+                    </div>
+                    <div class="EdgeColumn rightText">
+                      <div><%=productRating.ratingArray[4]%></div>
+                    </div>
+                    <div class="EdgeColumn">
+                      <div>3 star</div>
+                    </div>
+                    <div class="CentreColumn">
+                      <!-- <div class="barContainer">
+                        <div class="bar3"></div>
+                      </div> -->
+                      ★★★☆☆
+                    </div>
+                    <div class="EdgeColumn rightText">
+                      <div><%=productRating.ratingArray[3]%></div>
+                    </div>
+                    <div class="EdgeColumn">
+                      <div>2 star</div>
+                    </div>
+                    <div class="CentreColumn">
+                      <!-- <div class="barContainer">
+                        <div class="bar2"></div>
+                      </div> -->
+                      ★★☆☆☆
+                    </div>
+                    <div class="EdgeColumn rightText">
+                      <div><%=productRating.ratingArray[2]%></div>
+                    </div>
+                    <div class="EdgeColumn">
+                      <div>1 star</div>
+                    </div>
+                    <div class="CentreColumn">
+                      <!-- <div class="barContainer">
+                        <div class="bar1"></div>
+                      </div> -->
+                      ★☆☆☆☆
+                    </div>
+                    <div class="EdgeColumn rightText">
+                      <div><%=productRating.ratingArray[1]%></div>
+                    </div>
+                  </div>
+                </div>
+              </span>
+              <span class="wishlist rightCompartmentInner">
+                <!--  -->
+                <% if(isLoggedin){ %>
+                <form action="/addtorandomwishList" method="POST" id="lidrp" class="WishlistForm">
+                  <input type="hidden" id="selectedOption" name="listName" value="">
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <% if(wishList.length>0){ %>
+                      -Choose List-
+                      <% }else{ %>
+                      No wishList
+                      <% } %>
+                    </button>
+                    <% if(wishList.length>0){ %>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <% for(let list of wishList){ %>
+                      <a class="dropdown-item" href="#" onclick="selectOption('<%= list.name %>')"><%= list.name %></a>
+                      <input type="hidden" name="productID" value="<%= productData._id %>">
+                      <% } %>
+                    </div>
+                    <% } %>
+                  </div>
+                  <% if(wishList.length>0){ %>
+                  <button type="submit" class="btn btn-sm btn-outline-secondary" style="text-align: center;">Go</button>
+                  <% } %>
+                </form>
+                <% } %>
+                <!--  -->
+                <!-- <i class="fa-solid fa-heart wishlistInner"></i> -->
+              </span>
+              <!-- <span class="share rightCompartmentInner shareIcon">
+                <i class="fa-regular fa-share-from-square" id="shareItem"></i>
+              </span> -->
+            </div>
+          </div>
+          <div class="productNameAndVerified">
+            <h3><%= productData.name %></h3>
+            <% if (productData.ruggedVerrified==="true") { %>
+            <img src="/Images/Verrification/rugged-verified-high-resolution-color-logo-slim.png" alt="Rugged Verrified" class="RuggedVerified">
+            <% } %>
+          </div>
+          <hr>
+          <div class="ourPrice">Discounted Price</div>
+          <div class="priceOuter">
+            <div class="discountedPriceNumber">
+              <h2> ₹<%=productData.discountedPrice.toFixed(2)%></h2>
+            </div>
+            <div class="originalPrice"><s> ₹<%= productData.price %></s></div>
+            <div class="percentOff"><%= productData.discount %>% Off</div>
+          </div>
+          <div class="text">Inclusive of all Taxes.</div>
+          <% 
+              emiPerMonth = (productData.price*(1-(productData.discount*0.01))/24);
+          %>
+          <div class="Emi">Emi starts at ₹<%= emiPerMonth.toFixed(2)%> per month for 24 months.<a href="" class="emiLink">EMI details</a></div>
+          <hr>
+          <div class="services" data-bs-theme="dark">
+            <% if (productData.services[0]===1) { %>
+            <img src="/Images/services/freeDelivery.webp" class="serviceInner w-25" alt="Free Delivery">
+            <% } %>
+            <% if (productData.services[1]===1) { %>
+            <img src="/Images/services/returnPolicy.webp" class="serviceInner w-25" alt="30 Days Return Policy">
+            <% } %>
+            <% if (productData.services[2]===1) { %>
+            <img src="/Images/services/cashOnDelivery.webp" class="serviceInner w-25" alt="Cash On Delivery">
+            <% } %>
+            <% if (productData.services[3]===1) { %>
+            <img src="/Images/services/premiumQuality.png" class="serviceInner w-25" alt="Premium Quality Assurance">
+            <% } %>
+          </div>
+          <form action="/buynow" name="buyNowForm">
+            <div class="row">
+              <% if (productData.size.length>0) { %>
+              <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                <h6 class="">Size <span>(required)</span></h6>
+                <% for( let index = 0; index < productData.size.length; index++ ) { %>
+                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="size_<%=index%>"><%=productData.size[index]%>
+                  <input class="visually-hidden" type="radio" name="size" value="value_<%=index%>" id="size_<%=index%>" required="">
+                </label>
+                <% } %>
+              </div>
+              <% } %>
+              <% if (productData.type.length>0) { %>
+              <div class="col-sm-6 col-lg-12 detail-option mb-3">
+                <h6 class="">Type <span>(required)</span></h6>
+                <% for( let index = 0; index < productData.type.length; index++ ) { %>
+                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="material_<%=index%>"> <%=productData.type[index]%>
+                  <input class="visually-hidden" type="radio" name="material" value="value_<%=index%>" id="material_<%=index%>" required="">
+                </label>
+                <% } %>
+              </div>
+              <% } %>
+              <!-- colors option select -->
+              <!-- <div class="col-12 detail-option mb-3">
+                <h6 class="">Colour <span>(required)</span></h6>
+                <ul class="list-inline mb-0 colours-wrapper">
+                  <li class="list-inline-item">
+                    <label class="btn-colour" for="colour_Blue" style="background-color: #668cb9"> </label>
+                    <input class="visually-hidden" type="radio" name="colour" value="value_Blue" id="colour_Blue" required="">
+                  </li>
+                  <li class="list-inline-item">
+                    <label class="btn-colour" for="colour_White" style="background-color: #fff"> </label>
+                    <input class="visually-hidden" type="radio" name="colour" value="value_White" id="colour_White" required="">
+                  </li>
+                  <li class="list-inline-item">
+                    <label class="btn-colour" for="colour_Violet" style="background-color: #8b6ea4"> </label>
+                    <input class="visually-hidden" type="radio" name="colour" value="value_Violet" id="colour_Violet" required="">
+                  </li>
+                  <li class="list-inline-item">
+                    <label class="btn-colour" for="colour_Red" style="background-color: #dd6265"> </label>
+                    <input class="visually-hidden" type="radio" name="colour" value="value_Red" id="colour_Red" required="">
+                  </li>
+                </ul>
+              </div> -->
+              <div class="col-12 col-lg-6 detail-option mb-5">
+                <label class="fw-bold">Number of Items <span>(required)</span></label>
+                <input class="form-control detail-quantity" id="bx" name="items" type="number" value="1">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <section class="main">
+      <div class="container">
+        <ul class="nav nav-tabs flex-column flex-sm-row" role="tablist">
+          <li class="nav-item" role="presentation"><a class="nav-link detail-nav-link active" data-bs-toggle="tab" href="#description" role="tab" aria-selected="true">Description</a></li>
+          <li class="nav-item" role="presentation"><a class="nav-link detail-nav-link" data-bs-toggle="tab" href="#additional-information" role="tab" aria-selected="false" tabindex="-1">Additional Information</a></li>
+          <li class="nav-item" role="presentation"><a class="nav-link detail-nav-link" data-bs-toggle="tab" href="#reviews" role="tab" aria-selected="false" tabindex="-2">Reviews</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane px-3 active show" id="description" role="tabpanel">
+            <p class="text-muted"><%=productData.shortDescription%></p>
+            <p class="text-muted"><%=productData.description%></p>
+          </div>
+          <div class="tab-pane" id="additional-information" role="tabpanel">
+            <div class="row">
+              <div class="col-lg-6">
+                <table class="table text-sm">
+                  <tbody>
+                    <tr>
+                      <th class="text-uppercase fw-normal border-0">Product #</th>
+                      <td class="text-muted border-0"><%= productData._id %></td>
+                    </tr>
+                    <tr>
+                      <th class="text-uppercase fw-normal ">Dimensions</th>
+                      <td class="text-muted ">(Length*Width*Height)<%= productData.dimension.length %>*<%= productData.dimension.width %>*<%= productData.dimension.height %></td>
+                    </tr>
+                    <tr>
+                      <th class="text-uppercase fw-normal ">Weight(in KG)</th>
+                      <td class="text-muted "><%= productData.weightInKg %></td>
+                    </tr>
+                    <tr>
+                      <th class="text-uppercase fw-normal ">Colour</th>
+                      <td class="text-muted "><%= productData.colors %></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-lg-6">
+                <table class="table text-sm">
+                  <tbody>
+                    <tr>
+                      <th class="text-uppercase fw-normal border-0">Seller</th>
+                      <td class="text-muted border-0"><%= productData.sellerID %> </td>
+                    </tr>
+                    <tr>
+                      <th class="text-uppercase fw-normal ">Country of Origin</th>
+                      <td class="text-muted "><%=productData.CountryOfOrigin%></td>
+                    </tr>
+                    <tr>
+                      <th class="text-uppercase fw-normal ">Product #</th>
+                      <td class="text-muted ">Lorem ipsum dolor sit amet </td>
+                    </tr>
+                    <tr>
+                      <th class="text-uppercase fw-normal ">Available packaging</th>
+                      <td class="text-muted ">LOLDuis aute irure dolor in reprehenderit </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="reviews" role="tabpanel">
+            <div class="row mb-5">
+              <div class="col-lg-10 col-xl-9">
+                <% 
+                let max5 = productData.reviewsArray.length
+                if(max5>5){
+                  max5=5;
+                } 
+                let x=[];
+                if(productData.reviewsArray.length<=5)
+                {
+                  for( let index = 0; index < productData.reviewsArray.length; index++ ) {
+                    x.push(index);
+                  }
+                }
+                if(productData.reviewsArray.length>5){
+                  function myRandomInts(quantity, max){
+                    const arr = []
+                    while(arr.length < quantity){
+                      var candidateInt = Math.floor(Math.random() * max)
+                      if(arr.indexOf(candidateInt) === -1) arr.push(candidateInt)
+                    }
+                  return(arr)
+                  }
+                  x = myRandomInts(5,productData.reviewsArray.length);
+                }
+                %>
+                <% for( let index = 0; index < max5; index++ ) { %>
+
+                <div class="review d-flex">
+                  <div class="flex-shrink-0 text-center me-4 me-xl-5"><img class="review-image" src=<%= productData.reviewsArray[x[index]].photoURLS[0] %> alt="..."><span class="text-uppercase text-muted"></span></div>
+                  <div>
+                    <h5 class="mt-2 mb-1"><%=productData.reviewsArray[x[index]].userID%></h5>
+                    <div class="mb-2">
+                      <% for( let j = 0; j < productData.reviewsArray[x[index]].rating; j++ ) { %>
+                      <i class="fa fa-xs fa-star text-warning"></i>
+                      <% } %>
+                      <% for( let j = 0; j < 5-productData.reviewsArray[x[index]].rating; j++ ) { %>
+                      <i class="fa fa-xs fa-star text-gray-200"></i>
+                      <% } %>
+                    </div>
+                    <h6 class="mt-2 mb-1"><%= productData.reviewsArray[x[index]].title %></h6>
+                    <p class="text-muted"><%= productData.reviewsArray[x[index]].description %></p>
+                  </div>
+                </div>
+                <% } %>
+                <% if (isLoggedin) { %>
+                <div class="px-3">
+                  <h5 class="text-uppercase mb-4">Leave a review</h5>
+                  <form class="form" id="contact-form" method="post" action="/product?id=<%=productData._id%>">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="mb-4">
+                          <label class="form-label" for="name">Your Name</label>
+                          <input class="form-control" type="text" name="name" id="name" placeholder="Enter your name" required="required">
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="mb-4">
+                          <label class="form-label" for="ratingval">Your rating</label>
+                          <input id="ratingval" type="hidden">
+                          <select class="custom-select focus-shadow-0" name="ratingval" id="ratingval">
+                            <option value="5">★★★★★ (5/5)</option>
+                            <option value="4">★★★★☆ (4/5)</option>
+                            <option value="3">★★★☆☆ (3/5)</option>
+                            <option value="2">★★☆☆☆ (2/5)</option>
+                            <option value="1">★☆☆☆☆ (1/5)</option>
+                            <option value="0">☆☆☆☆☆ (0/5)</option>
+                          </select></input>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <label class="form-label" for="reviewTitle">Title</label>
+                      <input class="form-control" type="text" name="reviewTitle" id="reviewTitle" placeholder="Enter your Review Title" required="required">
+                    </div>
+                    <div class="mb-4">
+                      <label class="form-label" for="reviewImageURL">Image URL</label>
+                      <input class="form-control" type="text" name="reviewImageURL" id="reviewImageURL" placeholder="Enter Images of your item">
+                    </div>
+                    <div class="mb-4">
+                      <label class="form-label" for="review">Your Review</label>
+                      <textarea class="form-control" rows="4" name="review" id="review" placeholder="Enter your review" required="required"></textarea>
+                    </div>
+                    <input type="hidden" name="cartProducts" value=<%=cartprod%>>
+                    <button class="btn btn-outline-dark" type="submit">Post review</button>
+                  </form>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <%- include('partials/Navbars/footer.ejs') %>
+
+  <script src="/js/script.js"></script>
+  <script src="/js/productSearchPageJS.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

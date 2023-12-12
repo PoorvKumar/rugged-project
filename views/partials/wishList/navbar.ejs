@@ -1,0 +1,57 @@
+<ul>
+    <li>WishLists</li>
+    <li><div class="dropdown show">
+      <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Filter by
+      </a>
+    
+      <div class="dropdown-menu drpbgclr" aria-labelledby="dropdownMenuLink">
+        <a class="dropdown-item i1" href="#">Purchased</a>
+        <a class="dropdown-item i2" href="#">Unpurchased</a>
+        <!-- <a class="dropdown-item" href="#">Something else here</a> -->
+      </div>
+    </div></li>
+    <li>
+      <form action="" class="w-100 lp">
+        <input
+        type="search"
+        class="form-control"
+        placeholder="Search for item in List"
+        aria-label="Search"
+      />
+      <button type="button" class="btn bg-info">
+        <i class="fas fa-search ic"></i>
+      </button>
+    </form>
+
+
+    </li>
+    <li>Your Friends</li>
+    <li>
+      <div class="dropdown">
+        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Create List
+        </button>
+        <form class="dropdown-menu p-4" action="/createwishList" method="POST">
+          <div class="form-group">
+            <label for="exampleDropdownFormEmail2">List Name</label>
+            <div class="form-check">
+            </div>
+            <input type="text" name="listName" class="form-control" id="exampleDropdownFormEmail2" placeholder="Abc..">
+          </div>
+          <div class="form-check">
+          </div>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+      </div>
+
+    </li>
+    <li><form action="/deletewishList" method="POST">
+      <button type="submit" class="btn btn-info">
+        Delete
+      </button>
+      <input type="hidden" name="listName" value="<%= currentList %>">
+    </form></li>
+  </ul>
+
+<!-- nav finish -->
